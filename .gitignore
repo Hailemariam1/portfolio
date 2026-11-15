@@ -1,0 +1,18 @@
+node_modules/
+dist/
+build/
+
+# environment / secrets
+.env
+.env.*
+!.env.example
+
+# uploaded files when Cloudinary is not configured
+server/uploads/*
+!server/uploads/.gitkeep
+
+# logs and OS noise
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
