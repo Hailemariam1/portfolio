@@ -160,7 +160,7 @@ export default function Messages() {
                   <button
                     type="button"
                     onClick={() => setConfirm(message)}
-                    className="rounded-md p-1.5 text-ink-muted transition hover:bg-red-50 hover:text-red-600"
+                    className="rounded-md p-1.5 text-ink-muted transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-300"
                     aria-label={`Delete message from ${message.name}`}
                   >
                     <Trash2 className="h-3.5 w-3.5" />

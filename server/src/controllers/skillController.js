@@ -17,6 +17,9 @@ export const list = asyncHandler(async (_req, res) => {
   });
 });
 
+/** GET /api/admin/skills — authenticated content-management view. */
+export const listAdmin = list;
+
 /** POST /api/admin/skills */
 export const create = asyncHandler(async (req, res) => {
   const data = { ...req.body };

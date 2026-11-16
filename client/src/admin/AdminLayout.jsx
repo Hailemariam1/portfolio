@@ -16,6 +16,7 @@ import {
 import { api } from '../lib/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
+import ThemeToggle from '../components/ThemeToggle.jsx';
 
 const NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -79,7 +80,7 @@ function SidebarLinks({ unread, onNavigate }) {
             <Icon className="h-4 w-4 shrink-0 opacity-70" />
             <span className="flex-1">{item.label}</span>
             {item.badge && unread > 0 && (
-              <span className="rounded-full bg-clay px-1.5 py-0.5 text-[10px] font-semibold text-white">
+              <span className="rounded-full bg-clay px-1.5 py-0.5 text-[10px] font-semibold text-paper">
                 {unread}
               </span>
             )}
@@ -139,6 +140,10 @@ export default function AdminLayout() {
         </div>
 
         <div className="space-y-1 border-t border-line p-3">
+          <div className="mb-1 flex items-center justify-between rounded-lg px-3 py-1.5">
+            <span className="text-[13px] text-ink-soft">Theme</span>
+            <ThemeToggle className="h-8 w-8" />
+          </div>
           <Link
             to="/"
             className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13.5px] text-ink-soft transition hover:bg-paper-2 hover:text-ink"
@@ -159,7 +164,7 @@ export default function AdminLayout() {
 
       {menuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-ink/30" onClick={() => setMenuOpen(false)} />
+          <div className="absolute inset-0 bg-black/55" onClick={() => setMenuOpen(false)} />
           <div className="relative flex h-full w-64 flex-col border-r border-line bg-surface">
             <div className="flex h-16 items-center justify-between border-b border-line px-4">
               <p className="font-display text-[15px]">Content studio</p>
@@ -207,9 +212,12 @@ export default function AdminLayout() {
             <Menu className="h-4 w-4" />
           </button>
           <p className="font-display text-[15px]">Content studio</p>
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-[11px] font-medium text-paper">
-            {admin?.name?.[0] || 'H'}
-          </span>
+          <div className="flex items-center gap-2">
+            <ThemeToggle className="h-8 w-8" />
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-[11px] font-medium text-paper">
+              {admin?.name?.[0] || 'H'}
+            </span>
+          </div>
         </header>
 
         <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-9">

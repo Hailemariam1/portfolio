@@ -134,7 +134,7 @@ export default function MarkdownEditor({
       )}
 
       {error ? (
-        <p className="mt-1.5 text-xs font-medium text-red-600">{error}</p>
+        <p className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">{error}</p>
       ) : (
         <p className="mt-1.5 text-xs text-ink-muted">{hint}</p>
       )}

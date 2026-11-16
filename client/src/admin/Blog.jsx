@@ -224,7 +224,7 @@ export default function Blog() {
                         <button
                           type="button"
                           onClick={() => setConfirm(post)}
-                          className="rounded-lg p-1.5 text-ink-muted transition hover:bg-red-50 hover:text-red-600"
+                          className="rounded-lg p-1.5 text-ink-muted transition hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-300"
                           title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />

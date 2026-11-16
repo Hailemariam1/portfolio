@@ -25,6 +25,12 @@ async function seedAdmin() {
 
   if (existing && !reset) {
     console.log(`[seed] administrator ${env.admin.email} already exists — password unchanged.`);
+    const matches = await existing.verifyPassword(env.admin.password);
+    if (!matches) {
+      console.log(
+        '[seed] ADMIN_PASSWORD in server/.env differs from the stored password. Run `npm run admin:password` to apply it.'
+      );
+    }
     return;
   }
 

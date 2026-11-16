@@ -8,7 +8,19 @@
       name="description"
       content="Portfolio of Hailemariam, a full-stack web developer working with React, Node.js and MongoDB. Case studies, writing and contact details."
     />
-    <meta name="theme-color" content="#FBFAF7" />
+    <meta name="theme-color" content="#FAF7F1" />
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('portfolio-theme') === 'night') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (error) {
+          // Storage unavailable: fall back to the day theme.
+        }
+        document.documentElement.classList.add('js-reveal');
+      })();
+    </script>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316130F'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='%23FBFAF7' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E"

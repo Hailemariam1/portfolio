@@ -42,7 +42,7 @@ export const login = asyncHandler(async (req, res) => {
 
   const token = signAdminToken(admin);
   res.cookie(env.cookieName, token, adminCookieOptions());
-  res.json({ admin: publicAdmin(admin), token });
+  res.json({ admin: publicAdmin(admin) });
 });
 
 /** POST /api/admin/logout */

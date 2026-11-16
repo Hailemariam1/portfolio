@@ -42,7 +42,7 @@ export default function Contact() {
   return (
     <div className="container-page pt-12 sm:pt-16">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <div className="lg:col-span-5">
+        <div className="reveal lg:col-span-5">
           <p className="eyebrow">Contact</p>
           <h1 className="mt-3 text-[2.3rem] leading-[1.08] sm:text-[2.9rem]">
             Let&rsquo;s talk about a role, a project or a problem.
@@ -124,8 +124,8 @@ export default function Contact() {
           </dl>
         </div>
 
-        <div className="lg:col-span-7">
-          <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
+        <div className="reveal lg:col-span-7">
+          <div className="rounded-2xl border border-line bg-surface p-6 shadow-glow sm:p-8">
             {sent ? (
               <div className="flex flex-col items-start gap-4 py-8">
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-moss-soft text-moss">
@@ -225,7 +225,7 @@ export default function Contact() {
                 </div>
 
                 {errors.form && (
-                  <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/[0.08] dark:text-red-200">
                     {errors.form}
                   </p>
                 )}

@@ -10,7 +10,7 @@ function MediaFallback({ title }) {
         className="absolute inset-0 opacity-[0.55]"
         style={{
           backgroundImage:
-            'linear-gradient(to right, #E4DFD5 1px, transparent 1px), linear-gradient(to bottom, #E4DFD5 1px, transparent 1px)',
+            'linear-gradient(to right, rgb(var(--line-strong)) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--line-strong)) 1px, transparent 1px)',
           backgroundSize: '28px 28px'
         }}
       />
@@ -26,7 +26,7 @@ export default function ProjectCard({ project }) {
   return (
     <Link
       to={`/projects/${slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface transition duration-200 hover:border-line-strong hover:shadow-lift"
+      className="reveal group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition duration-200 hover:border-line-strong hover:shadow-glow"
     >
       <div className="relative aspect-[16/10] border-b border-line">
         {thumbnail?.url ? (

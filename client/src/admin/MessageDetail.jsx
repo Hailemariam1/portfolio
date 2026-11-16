@@ -146,7 +146,7 @@ export default function MessageDetail() {
             <button
               type="button"
               onClick={() => setConfirmOpen(true)}
-              className="btn-ghost w-full text-red-600 hover:bg-red-50"
+              className="btn-ghost w-full text-red-600 hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-500/10"
             >
               <Trash2 className="h-4 w-4" />
               Delete message

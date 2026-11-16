@@ -13,7 +13,7 @@ import { EXP_TYPE_LABELS, EXP_TYPE_ORDER, formatRange, groupByCategory } from '.
 
 function TimelineEntry({ entry }) {
   return (
-    <div className="relative border-l border-line pb-8 pl-6 last:pb-0">
+    <div className="reveal relative border-l border-line pb-8 pl-6 last:pb-0">
       <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-clay/70 ring-4 ring-paper" />
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
@@ -54,7 +54,7 @@ function TimelineEntry({ entry }) {
           href={entry.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1 text-[12px] text-clay-deep link-underline"
+          className="mt-2 inline-flex items-center gap-1 text-[12px] text-clay link-underline"
         >
           View credential
           <ArrowUpRight className="h-3 w-3" />
@@ -106,7 +106,7 @@ export default function About() {
             <h1 className="mt-3 text-[2.4rem] leading-[1.08] sm:text-[3rem]">
               A junior developer with a habit of finishing things.
             </h1>
-            <div className="mt-6 space-y-4">
+            <div className="reveal mt-6 space-y-4">
               {aboutParagraphs.map((paragraph) => (
                 <p key={paragraph.slice(0, 40)} className="text-[15px] leading-relaxed text-ink-soft">
                   {paragraph}
@@ -130,7 +130,7 @@ export default function About() {
           </div>
 
           <div className="lg:col-span-5">
-            <div className="overflow-hidden rounded-2xl border border-line bg-surface">
+            <div className="reveal overflow-hidden rounded-2xl border border-line bg-surface">
               {settings.profilePhoto?.url ? (
                 <img
                   src={settings.profilePhoto.url}
@@ -186,10 +186,11 @@ export default function About() {
               eyebrow="Skills"
               title="What I actually use."
               intro="Grouped by where each tool sits in a project. If it is listed here, it has been used to build something on this site."
+              className="reveal"
             />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="reveal-stagger mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {skillGroups.map((group) => (
-                <div key={group.category} className="rounded-2xl border border-line bg-surface p-5">
+                <div key={group.category} className="reveal rounded-2xl border border-line bg-surface p-5">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
                     {group.category}
                   </p>
@@ -213,6 +214,7 @@ export default function About() {
               eyebrow="Background"
               title="Education, certificates and the work around them."
               intro="Labelled honestly: these are academic, volunteer, collaborative and certification entries — not employment claims."
+              className="reveal"
             />
             <div className="mt-9 grid gap-10 lg:grid-cols-12">
               <div className="lg:col-span-8">
@@ -235,7 +237,7 @@ export default function About() {
               </div>
 
               <aside className="lg:col-span-4">
-                <div className="rounded-2xl border border-line bg-surface p-5">
+                <div className="reveal rounded-2xl border border-line bg-surface p-5">
                   <p className="eyebrow">Looking for</p>
                   <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">
                     A junior full-stack role where I can own small features end to end, or a freelance

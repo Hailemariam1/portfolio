@@ -9,7 +9,7 @@ export const CATEGORY_STYLES = {
   academic: 'border-moss/25 bg-moss-soft text-moss',
   personal: 'border-clay/25 bg-clay-soft text-clay-deep',
   collaborative: 'border-slateblue/25 bg-slateblue-soft text-slateblue',
-  freelance: 'border-ochre/25 bg-ochre-soft text-ochre'
+  freelance: 'border-plum/25 bg-plum-soft text-plum'
 };
 
 export const CATEGORY_CONTEXT = {

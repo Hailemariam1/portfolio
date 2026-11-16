@@ -9,6 +9,7 @@ const adminSchema = new mongoose.Schema(
     passwordHash: { type: String, required: true, select: false },
     role: { type: String, enum: ['admin'], default: 'admin' },
     lastLoginAt: { type: Date, default: null },
+    passwordChangedAt: { type: Date, default: null },
     failedLoginAttempts: { type: Number, default: 0 },
     lockUntil: { type: Date, default: null }
   },
@@ -19,6 +20,7 @@ applyApiTransforms(adminSchema);
 
 adminSchema.methods.setPassword = async function setPassword(plain) {
   this.passwordHash = await bcrypt.hash(plain, 12);
+  this.passwordChangedAt = new Date();
 };
 
 adminSchema.methods.verifyPassword = function verifyPassword(plain) {

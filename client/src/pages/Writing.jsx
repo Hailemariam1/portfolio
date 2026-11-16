@@ -35,7 +35,7 @@ export default function Writing() {
 
   return (
     <div className="container-page pt-12 sm:pt-16">
-      <header className="max-w-3xl">
+      <header className="reveal max-w-3xl">
         <p className="eyebrow">Writing</p>
         <h1 className="mt-3 text-[2.3rem] leading-[1.08] sm:text-[3rem]">
           Notes from building things.
@@ -78,12 +78,12 @@ export default function Writing() {
             description="Published articles appear here automatically. Drafts stay private inside the dashboard."
           />
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <Link
                 key={post.id}
                 to={`/writing/${post.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface transition hover:border-line-strong hover:shadow-lift"
+                className="reveal group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition hover:border-line-strong hover:shadow-glow"
               >
                 <div className="relative aspect-[16/9] border-b border-line bg-paper-2">
                   {post.coverImage?.url ? (

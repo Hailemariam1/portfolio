@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { SettingsProvider } from './context/SettingsContext.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import PublicLayout from './components/Layout.jsx';
+import AmbientBackground from './components/AmbientBackground.jsx';
+import ScrollReveal from './components/ScrollReveal.jsx';
 import Home from './pages/Home.jsx';
 import Projects from './pages/Projects.jsx';
 import ProjectDetail from './pages/ProjectDetail.jsx';
@@ -40,7 +43,7 @@ function RequireAuth({ children }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center gap-3 bg-paper text-sm text-ink-muted">
+      <div className="flex min-h-screen items-center justify-center gap-3 bg-transparent text-sm text-ink-muted">
         <Spinner className="h-4 w-4" />
         Checking your session…
       </div>
@@ -53,10 +56,14 @@ function RequireAuth({ children }) {
 
 export default function App() {
   return (
-    <ToastProvider>
-      <SettingsProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <SettingsProvider>
         <AuthProvider>
+          <AmbientBackground />
+          <div className="relative z-10">
           <ScrollToTop />
+          <ScrollReveal />
           <Routes>
             <Route element={<PublicLayout />}>
               <Route index element={<Home />} />
@@ -93,8 +100,10 @@ export default function App() {
               <Route path="settings" element={<SettingsPage />} />
             </Route>
           </Routes>
+          </div>
         </AuthProvider>
-      </SettingsProvider>
-    </ToastProvider>
+        </SettingsProvider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }

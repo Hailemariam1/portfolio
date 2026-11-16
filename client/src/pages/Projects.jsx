@@ -58,7 +58,7 @@ export default function Projects() {
 
   return (
     <div className="container-page pt-12 sm:pt-16">
-      <header className="max-w-3xl">
+      <header className="reveal max-w-3xl">
         <p className="eyebrow">Portfolio</p>
         <h1 className="mt-3 text-[2.3rem] leading-[1.08] sm:text-[3rem]">
           Projects, with the work explained.
@@ -141,7 +141,7 @@ export default function Projects() {
               {pagination?.total === 1 ? 'project' : 'projects'}
               {category !== 'all' && ` · ${CATEGORY_LABELS[category]}`}
             </p>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

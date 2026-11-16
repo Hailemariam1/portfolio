@@ -68,7 +68,7 @@ export function ImageUpload({ value, onChange, label = 'Thumbnail', hint }) {
             {value?.url && (
               <button
                 type="button"
-                className="btn-ghost btn-xs text-red-600 hover:bg-red-50"
+                className="btn-ghost btn-xs text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
                 onClick={() => onChange(null)}
                 disabled={busy}
               >
@@ -139,7 +139,7 @@ export function GalleryUpload({ images = [], onChange, max = 8 }) {
             <button
               type="button"
               onClick={() => onChange(images.filter((_, itemIndex) => itemIndex !== index))}
-              className="absolute right-2 top-2 rounded-lg bg-white/95 p-1.5 text-red-600 shadow-sm transition hover:bg-white"
+              className="absolute right-2 top-2 rounded-lg border border-line bg-paper/90 p-1.5 text-red-600 shadow-sm backdrop-blur transition hover:bg-paper-2 dark:text-red-400"
               aria-label={`Remove screenshot ${index + 1}`}
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -220,7 +220,7 @@ export function ResumeUpload({ value, onChange }) {
           {value?.url && (
             <button
               type="button"
-              className="btn-ghost btn-xs text-red-600 hover:bg-red-50"
+              className="btn-ghost btn-xs text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
               onClick={() => onChange(null)}
               disabled={busy}
             >

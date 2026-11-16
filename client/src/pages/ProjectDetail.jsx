@@ -20,7 +20,7 @@ function Section({ eyebrow, title, children, className = '' }) {
     <section className={className}>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <h2 className="mt-2.5 text-[1.6rem] leading-snug">{title}</h2>
-      <div className="mt-3">{children}</div>
+      <div className="reveal mt-3">{children}</div>
     </section>
   );
 }
@@ -80,11 +80,11 @@ export default function ProjectDetail() {
         All projects
       </Link>
 
-      <header className="mt-6 border-b border-line pb-9">
+      <header className="reveal mt-6 border-b border-line pb-9">
         <div className="flex flex-wrap items-center gap-2">
           <CategoryBadge category={project.category} />
           {project.featured && (
-            <span className="chip border-clay/20 bg-clay-soft text-clay-deep">Featured</span>
+            <span className="chip border-clay/20 bg-clay-soft text-clay">Featured</span>
           )}
         </div>
         <h1 className="mt-5 max-w-4xl text-[2.2rem] leading-[1.07] sm:text-[3rem]">
@@ -127,7 +127,7 @@ export default function ProjectDetail() {
       </header>
 
       {project.thumbnail?.url && (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-paper-2">
+        <div className="reveal reveal--scale mt-8 overflow-hidden rounded-2xl border border-line bg-paper-2">
           <img
             src={project.thumbnail.url}
             alt={project.thumbnail.alt || `${project.title} preview`}
@@ -203,7 +203,7 @@ export default function ProjectDetail() {
                       </p>
                     </div>
                     <div className="flex gap-3 px-5 py-4">
-                      <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-ochre" />
+                      <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-clay" />
                       <div>
                         <p className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
                           How I approached it
@@ -221,7 +221,7 @@ export default function ProjectDetail() {
         </div>
 
         <aside className="lg:col-span-4">
-          <div className="space-y-4 lg:sticky lg:top-24">
+          <div className="reveal space-y-4 lg:sticky lg:top-24">
             <div className="rounded-2xl border border-line bg-surface p-5">
               <p className="eyebrow">Project type</p>
               <p className="mt-2 font-display text-[1.15rem]">
@@ -305,7 +305,7 @@ export default function ProjectDetail() {
                 href={image.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group overflow-hidden rounded-2xl border border-line bg-paper-2"
+                className="reveal reveal--scale group overflow-hidden rounded-2xl border border-line bg-paper-2"
               >
                 <img
                   src={image.url}

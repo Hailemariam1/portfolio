@@ -96,6 +96,19 @@ npm run seed:reset    # replaces projects, skills, experience and posts with the
 > links, education entries and settings with your own from the dashboard before sharing the site.
 > The seeded GitHub links (`github.com/hailemariam/...`) are placeholders.
 
+### Lost access to the dashboard?
+
+The seed script only *creates* the account. Changing `ADMIN_PASSWORD` in `server/.env` afterwards
+does not change an existing password until you run:
+
+```bash
+npm run admin:password
+```
+
+That command re-hashes `ADMIN_PASSWORD` for `ADMIN_EMAIL`, clears any failed-attempt lock and signs the
+account out of nothing else. Five wrong passwords lock the account for 15 minutes and the endpoint
+allows five attempts per IP per 15 minutes, so a reset is the quickest way back in.
+
 ### 5. Run it
 
 ```bash
@@ -181,7 +194,8 @@ Errors are JSON: `{ "error": "message", "details": [{ "field": "", "message": ""
 
 - **Passwords** are hashed with bcrypt (cost 12) and never returned by the API.
 - **Sessions** are JWTs delivered in an `httpOnly` cookie (not readable by JavaScript), with
-  `sameSite=lax` and `secure` in production.
+  `sameSite=lax` and `secure` in production. Changing the password invalidates tokens issued
+  before the change.
 - **Brute force**: login is limited to 5 attempts per IP per 15 minutes, and an account locks for
   15 minutes after 5 consecutive failures. Errors never reveal whether an email exists.
 - **Authorization**: `requireAuth` is mounted on the admin router, so new admin routes are

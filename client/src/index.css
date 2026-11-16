@@ -2,22 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --------------------------------------------------------------------------
+   Semantic palette. `:root` is the original warm day theme; `.dark` holds the
+   night theme. Every Tailwind colour token resolves to these channels.
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --paper: 250 247 241;
+  --paper-2: 243 237 228;
+  --surface: 255 255 255;
+  --ink: 32 29 24;
+  --ink-soft: 84 77 68;
+  --ink-muted: 122 113 101;
+  --line: 228 221 210;
+  --line-strong: 210 199 184;
+  --clay: 166 79 48;
+  --clay-soft: 247 231 222;
+  --clay-deep: 128 57 32;
+  --moss: 56 106 78;
+  --moss-soft: 231 240 233;
+  --slateblue: 66 91 128;
+  --slateblue-soft: 232 238 246;
+  --plum: 104 70 112;
+  --plum-soft: 242 233 244;
+  --ochre: 145 101 35;
+  --ochre-soft: 247 237 219;
+
+  --shadow: 60 50 40;
+  --glow: 56 140 130;
+
+  --ambient-top: 255 253 248;
+  --ambient-edge: 240 233 222;
+  --aura-teal: 32 122 116;
+  --aura-blue: 66 110 160;
+  --aura-deep: 90 100 130;
+  --aura-strength: 0.06;
+  --aura-strength-deep: 0.08;
+  --grid-dot: 95 85 68;
+  --grid-opacity: 0.14;
+  --spot: 32 122 116;
+  --spot-2: 66 110 160;
+  --spot-strength: 0.26;
+  --spot-blend: normal;
+  --spot-radius: 400px;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --paper: 7 13 24;
+  --paper-2: 11 21 36;
+  --surface: 13 24 40;
+  --ink: 233 239 249;
+  --ink-soft: 179 193 214;
+  --ink-muted: 130 150 176;
+  --line: 28 43 68;
+  --line-strong: 43 64 95;
+  --clay: 240 190 126;
+  --clay-soft: 42 33 20;
+  --clay-deep: 248 216 166;
+  --moss: 134 220 192;
+  --moss-soft: 16 42 38;
+  --slateblue: 169 192 240;
+  --slateblue-soft: 22 35 53;
+  --plum: 203 178 242;
+  --plum-soft: 33 27 51;
+  --ochre: 230 201 143;
+  --ochre-soft: 41 35 22;
+
+  --shadow: 0 0 0;
+  --glow: 134 220 192;
+
+  --ambient-top: 13 28 48;
+  --ambient-edge: 5 10 18;
+  --aura-teal: 45 212 191;
+  --aura-blue: 59 130 246;
+  --aura-deep: 20 90 120;
+  --aura-strength: 0.1;
+  --aura-strength-deep: 0.16;
+  --grid-dot: 148 182 224;
+  --grid-opacity: 0.16;
+  --spot: 94 234 212;
+  --spot-2: 56 189 248;
+  --spot-strength: 0.13;
+  --spot-blend: screen;
+  --spot-radius: 360px;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    background-color: rgb(var(--paper));
   }
 
   body {
-    @apply bg-paper font-sans text-ink antialiased;
+    @apply min-h-screen bg-transparent font-sans text-ink antialiased;
   }
 
   ::selection {
-    @apply bg-clay/20;
+    @apply bg-clay/25 text-ink;
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-clay/60 ring-offset-2 ring-offset-paper;
+    @apply outline-none ring-2 ring-clay/70 ring-offset-2 ring-offset-paper;
   }
 
   h1,
@@ -25,6 +114,21 @@
   h3 {
     @apply font-display font-normal tracking-tight;
     font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--paper-2));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--line-strong));
+    border: 2px solid rgb(var(--paper-2));
+    border-radius: 999px;
   }
 }
 
@@ -42,15 +146,15 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-150 hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-150 hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-55;
   }
 
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-clay px-5 py-2.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-clay-deep disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-clay px-5 py-2.5 text-sm font-medium text-paper transition-colors duration-150 hover:bg-clay-deep disabled:cursor-not-allowed disabled:opacity-55;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line-strong bg-surface px-5 py-2.5 text-sm font-medium text-ink transition-colors duration-150 hover:border-ink/25 hover:bg-paper-2 disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-line-strong bg-surface px-5 py-2.5 text-sm font-medium text-ink transition-colors duration-150 hover:border-ink/30 hover:bg-paper-2 disabled:cursor-not-allowed disabled:opacity-55;
   }
 
   .btn-ghost {
@@ -58,7 +162,7 @@
   }
 
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-55;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-55;
   }
 
   .btn-xs {
@@ -74,15 +178,15 @@
   }
 
   .input {
-    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink transition placeholder:text-ink-muted/60 focus:border-clay focus:outline-none focus:ring-2 focus:ring-clay/15;
+    @apply w-full rounded-xl border border-line bg-paper-2/60 px-3.5 py-2.5 text-sm text-ink transition placeholder:text-ink-muted/60 focus:border-clay/60 focus:outline-none focus:ring-2 focus:ring-clay/15;
   }
 
   .input-error {
-    @apply border-red-300 focus:border-red-400 focus:ring-red-100;
+    @apply border-red-400/60 focus:border-red-400 focus:ring-red-500/15;
   }
 
   .chip {
-    @apply inline-flex items-center rounded-full border border-line bg-paper-2/70 px-2.5 py-1 text-[12px] font-medium text-ink-soft;
+    @apply inline-flex items-center rounded-full border border-line bg-paper-2/80 px-2.5 py-1 text-[12px] font-medium text-ink-soft;
   }
 
   .table-head {
@@ -90,11 +194,196 @@
   }
 
   .link-underline {
-    @apply underline decoration-line-strong decoration-1 underline-offset-4 transition hover:decoration-ink;
+    @apply underline decoration-line-strong decoration-1 underline-offset-4 transition hover:decoration-clay;
+  }
+
+  /* Small version of the page spotlight, following the pointer inside the
+     theme toggle. Coordinates are written directly to CSS variables. */
+  .theme-toggle__glow {
+    background: radial-gradient(
+      42px circle at var(--toggle-x, 50%) var(--toggle-y, 50%),
+      rgb(var(--glow) / 0.36),
+      transparent 70%
+    );
+    opacity: var(--toggle-opacity, 0);
+    transition: opacity 240ms ease;
   }
 
   .prose-portfolio {
-    @apply prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-normal prose-headings:tracking-tight prose-headings:text-ink prose-p:text-ink-soft prose-p:leading-relaxed prose-a:text-clay-deep prose-a:underline prose-a:decoration-clay/30 prose-a:underline-offset-4 hover:prose-a:decoration-clay prose-strong:text-ink prose-code:rounded prose-code:bg-paper-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[0.85em] prose-code:font-normal prose-code:text-ink prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-xl prose-pre:border prose-pre:border-line prose-pre:bg-ink prose-pre:text-paper prose-blockquote:border-l-clay/40 prose-blockquote:text-ink-soft prose-li:text-ink-soft prose-hr:border-line;
+    @apply prose max-w-none prose-headings:font-display prose-headings:font-normal prose-headings:tracking-tight prose-headings:text-ink prose-p:text-ink-soft prose-p:leading-relaxed prose-a:text-clay prose-a:underline prose-a:decoration-clay/30 prose-a:underline-offset-4 hover:prose-a:decoration-clay prose-strong:text-ink prose-code:rounded prose-code:bg-paper-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[0.85em] prose-code:font-normal prose-code:text-clay-deep prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-xl prose-pre:border prose-pre:border-line prose-pre:bg-paper-2 prose-pre:text-ink-soft prose-blockquote:border-l-clay/40 prose-blockquote:text-ink-soft prose-li:text-ink-soft prose-li:marker:text-ink-muted prose-th:text-ink prose-td:text-ink-soft prose-hr:border-line;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal: hidden only when the inline <html class="js-reveal"> flag is
+   present, so content stays visible without JavaScript.
+   -------------------------------------------------------------------------- */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.js-reveal .reveal--scale {
+  transform: scale(0.985);
+}
+
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Stagger direct children of a grid or list. */
+.reveal-stagger > .reveal:nth-child(2) {
+  transition-delay: 70ms;
+}
+.reveal-stagger > .reveal:nth-child(3) {
+  transition-delay: 140ms;
+}
+.reveal-stagger > .reveal:nth-child(4) {
+  transition-delay: 210ms;
+}
+.reveal-stagger > .reveal:nth-child(5) {
+  transition-delay: 280ms;
+}
+.reveal-stagger > .reveal:nth-child(6) {
+  transition-delay: 350ms;
+}
+
+/* --------------------------------------------------------------------------
+   Ambient background: fixed, non-interactive, pure CSS lighting layers.
+   The spotlight is driven by --spot-x / --spot-y written from requestAnimationFrame.
+   -------------------------------------------------------------------------- */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 85% at 50% -10%,
+    rgb(var(--ambient-top)) 0%,
+    rgb(var(--paper)) 55%,
+    rgb(var(--ambient-edge)) 100%
+  );
+}
+
+.ambient__aura,
+.ambient__shimmer {
+  position: absolute;
+  inset: -25%;
+  pointer-events: none;
+}
+
+.ambient__aura {
+  background:
+    radial-gradient(38% 38% at 22% 28%, rgb(var(--aura-teal) / var(--aura-strength)), transparent 70%),
+    radial-gradient(34% 34% at 78% 18%, rgb(var(--aura-blue) / var(--aura-strength)), transparent 72%),
+    radial-gradient(
+      44% 44% at 62% 88%,
+      rgb(var(--aura-deep) / var(--aura-strength-deep)),
+      transparent 75%
+    );
+  filter: blur(26px);
+  animation: ambient-drift-a 34s ease-in-out infinite alternate;
+}
+
+.ambient__shimmer {
+  background:
+    radial-gradient(26% 26% at 68% 54%, rgb(var(--aura-teal) / calc(var(--aura-strength) * 0.5)), transparent 70%),
+    radial-gradient(30% 30% at 30% 72%, rgb(var(--aura-blue) / calc(var(--aura-strength) * 0.5)), transparent 70%);
+  animation: ambient-drift-b 46s ease-in-out infinite alternate;
+}
+
+.ambient__grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgb(var(--grid-dot) / 0.22) 1px, transparent 1.2px);
+  background-size: 26px 26px;
+  opacity: var(--grid-opacity);
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 32%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 32%, #000 35%, transparent 100%);
+}
+
+.ambient__spot {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle var(--spot-radius, 360px) at var(--spot-x, 50%) var(--spot-y, 38%),
+    rgb(var(--spot) / var(--spot-strength)),
+    rgb(var(--spot-2) / calc(var(--spot-strength) * 0.45)) 46%,
+    transparent 72%
+  );
+  opacity: var(--spot-opacity, 0);
+  transition: opacity 700ms ease;
+  mix-blend-mode: var(--spot-blend);
+}
+
+@keyframes ambient-drift-a {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(2%, 2%, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-1%, 3%, 0) scale(1.06);
+  }
+}
+
+@keyframes ambient-drift-b {
+  0% {
+    transform: translate3d(1%, 2%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-2%, -2%, 0) scale(1.02);
+  }
+}
+
+/* Touch devices get the static gradient: no cursor light, no drifting layers. */
+@media (hover: none), (pointer: coarse) {
+  .ambient__spot {
+    display: none;
+  }
+
+  .ambient__aura,
+  .ambient__shimmer {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ambient__aura,
+  .ambient__shimmer {
+    animation: none;
+  }
+
+  .ambient__spot {
+    display: none;
+  }
+
+  .js-reveal .reveal,
+  .js-reveal .reveal--scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .reveal-stagger > .reveal {
+    transition-delay: 0ms !important;
+  }
+
+  .animate-pulse-dot,
+  .animate-fade-up {
+    animation: none !important;
   }
 }
 

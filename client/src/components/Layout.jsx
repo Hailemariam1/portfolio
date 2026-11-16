@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Github, Linkedin, Mail, Menu, X } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { AvailabilityBadge } from './ui.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const NAV_ITEMS = [
   { to: '/projects', label: 'Projects' },
@@ -32,7 +33,7 @@ export default function PublicLayout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-40 border-b border-line/70 bg-paper/85 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-line/70 bg-paper/70 backdrop-blur-xl">
         <div className="container-page flex h-16 items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2.5" aria-label={`${settings.name} — home`}>
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-ink font-display text-sm text-paper">
@@ -52,21 +53,25 @@ export default function PublicLayout() {
                 {item.label}
               </NavLink>
             ))}
+            <ThemeToggle className="ml-2" />
             <Link to="/contact" className="btn-primary btn-xs ml-3">
               Let&rsquo;s talk
               <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
           </nav>
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            className="rounded-lg border border-line p-2 text-ink-soft transition hover:bg-paper-2 md:hidden"
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="rounded-lg border border-line p-2 text-ink-soft transition hover:bg-paper-2 md:hidden"
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
 
         {menuOpen && (
@@ -97,7 +102,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
 
-      <footer className="mt-24 border-t border-line bg-paper-2/40">
+      <footer className="mt-24 border-t border-line bg-paper-2/50">
         <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <p className="font-display text-2xl">{settings.name}</p>

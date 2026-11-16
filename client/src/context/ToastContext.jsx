@@ -5,7 +5,7 @@ const ToastContext = createContext(null);
 
 const TONES = {
   success: 'border-moss/25 bg-moss-soft text-moss',
-  error: 'border-red-200 bg-red-50 text-red-700',
+  error: 'border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-[#1A0E12] dark:text-red-200',
   info: 'border-line bg-surface text-ink'
 };
 

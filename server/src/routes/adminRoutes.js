@@ -9,6 +9,7 @@ import {
   experienceUpdatePayload,
   idParam,
   loginPayload,
+  messageListQuery,
   messageUpdatePayload,
   postPayload,
   postUpdatePayload,
@@ -60,11 +61,13 @@ router.patch(
 router.delete('/projects/:id', validate({ params: idParam }), projects.remove);
 
 /* Skills */
+router.get('/skills', skills.listAdmin);
 router.post('/skills', validate({ body: skillPayload }), skills.create);
 router.put('/skills/:id', validate({ params: idParam, body: skillUpdatePayload }), skills.update);
 router.delete('/skills/:id', validate({ params: idParam }), skills.remove);
 
 /* Experience & education */
+router.get('/experience', experience.listAdmin);
 router.post('/experience', validate({ body: experiencePayload }), experience.create);
 router.put(
   '/experience/:id',
@@ -81,7 +84,7 @@ router.put('/blog/:id', validate({ params: idParam, body: postUpdatePayload }), 
 router.delete('/blog/:id', validate({ params: idParam }), blog.remove);
 
 /* Contact inbox */
-router.get('/messages', messages.listAdmin);
+router.get('/messages', validate({ query: messageListQuery }), messages.listAdmin);
 router.get('/messages/:id', validate({ params: idParam }), messages.getAdminOne);
 router.patch('/messages/:id', validate({ params: idParam, body: messageUpdatePayload }), messages.patch);
 router.delete('/messages/:id', validate({ params: idParam }), messages.remove);

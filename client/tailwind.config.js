@@ -3,17 +3,45 @@ import typography from '@tailwindcss/typography';
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        paper: { DEFAULT: '#FBFAF7', 2: '#F3F0E9' },
-        surface: '#FFFFFF',
-        ink: { DEFAULT: '#16130F', soft: '#403A33', muted: '#736A5F' },
-        line: { DEFAULT: '#E4DFD5', strong: '#D2CBBB' },
-        clay: { DEFAULT: '#AE4F2E', soft: '#F8EBE4', deep: '#883B20' },
-        moss: { DEFAULT: '#2C5B4C', soft: '#E8F1EC' },
-        slateblue: { DEFAULT: '#36557D', soft: '#E9EEF5' },
-        ochre: { DEFAULT: '#84601C', soft: '#F7EFDD' }
+        paper: {
+          DEFAULT: 'rgb(var(--paper) / <alpha-value>)',
+          2: 'rgb(var(--paper-2) / <alpha-value>)'
+        },
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        ink: {
+          DEFAULT: 'rgb(var(--ink) / <alpha-value>)',
+          soft: 'rgb(var(--ink-soft) / <alpha-value>)',
+          muted: 'rgb(var(--ink-muted) / <alpha-value>)'
+        },
+        line: {
+          DEFAULT: 'rgb(var(--line) / <alpha-value>)',
+          strong: 'rgb(var(--line-strong) / <alpha-value>)'
+        },
+        clay: {
+          DEFAULT: 'rgb(var(--clay) / <alpha-value>)',
+          soft: 'rgb(var(--clay-soft) / <alpha-value>)',
+          deep: 'rgb(var(--clay-deep) / <alpha-value>)'
+        },
+        moss: {
+          DEFAULT: 'rgb(var(--moss) / <alpha-value>)',
+          soft: 'rgb(var(--moss-soft) / <alpha-value>)'
+        },
+        slateblue: {
+          DEFAULT: 'rgb(var(--slateblue) / <alpha-value>)',
+          soft: 'rgb(var(--slateblue-soft) / <alpha-value>)'
+        },
+        plum: {
+          DEFAULT: 'rgb(var(--plum) / <alpha-value>)',
+          soft: 'rgb(var(--plum-soft) / <alpha-value>)'
+        },
+        ochre: {
+          DEFAULT: 'rgb(var(--ochre) / <alpha-value>)',
+          soft: 'rgb(var(--ochre-soft) / <alpha-value>)'
+        }
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
@@ -21,7 +49,8 @@ export default {
       },
       maxWidth: { content: '74rem' },
       boxShadow: {
-        lift: '0 24px 60px -32px rgba(22, 19, 15, 0.28)'
+        lift: '0 32px 80px -48px rgb(var(--shadow) / 0.45)',
+        glow: '0 0 0 1px rgb(var(--glow) / 0.12), 0 24px 60px -40px rgb(var(--shadow) / 0.32)'
       },
       keyframes: {
         'fade-up': {

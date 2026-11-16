@@ -82,7 +82,7 @@ export function Field({ label, htmlFor, hint, error, required, children, classNa
       )}
       {children}
       {error ? (
-        <p className="mt-1.5 text-xs font-medium text-red-600">{error}</p>
+        <p className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">{error}</p>
       ) : (
         hint && <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">{hint}</p>
       )}
@@ -118,9 +118,9 @@ export function LoadingBlock({ label = 'Loading…', className = '' }) {
 
 export function ErrorBlock({ title = 'Something went wrong', message, action }) {
   return (
-    <div className="rounded-2xl border border-red-100 bg-red-50/60 p-6 text-sm text-red-800">
+    <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800 dark:border-red-500/25 dark:bg-red-500/[0.08] dark:text-red-200">
       <p className="font-medium">{title}</p>
-      {message && <p className="mt-1 text-red-700/90">{message}</p>}
+      {message && <p className="mt-1 text-red-700 dark:text-red-200/80">{message}</p>}
       {action && <div className="mt-4">{action}</div>}
     </div>
   );
@@ -148,7 +148,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6">
       <div
-        className="absolute inset-0 bg-ink/35 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-[#02060E]/75 backdrop-blur-[2px]"
         onClick={onClose}
         aria-hidden="true"
       />

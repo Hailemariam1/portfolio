@@ -30,6 +30,14 @@ export async function requireAuth(req, _res, next) {
     const admin = await Admin.findById(payload.sub);
     if (!admin) throw ApiError.unauthorized('This account no longer exists.');
 
+    // A password reset invalidates tokens issued before the change.
+    if (admin.passwordChangedAt && payload.iat) {
+      const changedAtSeconds = Math.floor(admin.passwordChangedAt.getTime() / 1000);
+      if (payload.iat < changedAtSeconds) {
+        throw ApiError.unauthorized('Your session is no longer valid. Please sign in again.');
+      }
+    }
+
     req.admin = admin;
     return next();
   } catch (error) {

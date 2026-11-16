@@ -59,7 +59,7 @@ export default function PostDetail() {
         All writing
       </Link>
 
-      <header className="mt-6 border-b border-line pb-8">
+      <header className="reveal mt-6 border-b border-line pb-8">
         <p className="eyebrow">{post.category}</p>
         <h1 className="mt-3 text-[2.1rem] leading-[1.1] sm:text-[2.7rem]">{post.title}</h1>
         <p className="mt-3 text-[14px] text-ink-muted">
@@ -71,7 +71,7 @@ export default function PostDetail() {
       </header>
 
       {post.coverImage?.url && (
-        <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-paper-2">
+        <div className="reveal reveal--scale mt-8 overflow-hidden rounded-2xl border border-line bg-paper-2">
           <img
             src={post.coverImage.url}
             alt={post.coverImage.alt || post.title}
@@ -80,7 +80,7 @@ export default function PostDetail() {
         </div>
       )}
 
-      <div className="mt-9">
+      <div className="reveal mt-9">
         <Markdown>{post.content}</Markdown>
       </div>
 
