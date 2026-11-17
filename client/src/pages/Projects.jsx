@@ -38,8 +38,9 @@ export default function Projects() {
             q: query || undefined
           })}`
         );
-        setItems((current) => (replace ? data.items : [...current, ...data.items]));
-        setPagination(data.pagination);
+        const nextItems = Array.isArray(data?.items) ? data.items : [];
+        setItems((current) => (replace ? nextItems : [...current, ...nextItems]));
+        setPagination(data?.pagination || null);
         setPage(targetPage);
       } catch (requestError) {
         setError(requestError.message || 'Could not load projects.');

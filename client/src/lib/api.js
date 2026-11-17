@@ -42,12 +42,20 @@ async function request(path, { method = 'GET', body, signal } = {}) {
 
   const text = await response.text();
   let data = null;
+  const contentType = response.headers.get('content-type') || '';
   if (text) {
     try {
       data = JSON.parse(text);
     } catch {
       data = { error: text.slice(0, 200) };
     }
+  }
+
+  if (!contentType.toLowerCase().includes('application/json')) {
+    throw new ApiError(
+      'The API is not configured for this deployment. Set VITE_API_URL to the backend URL.',
+      response.status
+    );
   }
 
   if (!response.ok) {
