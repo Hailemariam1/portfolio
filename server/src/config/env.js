@@ -20,11 +20,29 @@ const portNumber = (value, fallback) => {
   return Number.isInteger(parsed) && parsed > 0 && parsed < 65536 ? parsed : fallback;
 };
 
+// Browsers never send a trailing slash in the Origin header, but deployed
+// environment values often include one. Normalise before comparing.
+const normalizeOrigin = (value) => String(value || '').trim().replace(/\/+$/, '');
+
+const configuredClientUrls = [process.env.CLIENT_URL, ...(process.env.CLIENT_URLS || '').split(',')]
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
+const clientUrl = configuredClientUrls[0] || 'http://localhost:5173';
+const clientUrls = [...new Set([clientUrl, ...configuredClientUrls])];
+
+if (!isProd) {
+  for (const local of ['http://localhost:5173', 'http://127.0.0.1:5173']) {
+    if (!clientUrls.includes(local)) clientUrls.push(local);
+  }
+}
+
 export const env = {
   nodeEnv,
   isProd,
   port: portNumber(process.env.PORT, 5000),
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  clientUrl,
+  clientUrls,
   mongoUri: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/portfolio',
 
   jwtSecret: process.env.JWT_SECRET || '',
@@ -65,12 +83,13 @@ env.cloudinary.enabled = Boolean(
 );
 
 if (isProd) {
-  const missing = ['CLIENT_URL', 'MONGO_URI', 'JWT_SECRET'].filter((key) => !process.env[key]);
+  const missing = ['MONGO_URI', 'JWT_SECRET'].filter((key) => !process.env[key]);
+  if (!process.env.CLIENT_URL && !process.env.CLIENT_URLS) missing.push('CLIENT_URL');
   if (missing.length) {
     throw new Error(`Missing required production environment variables: ${missing.join(', ')}`);
   }
-  if (!/^https:\/\//i.test(env.clientUrl)) {
-    throw new Error('CLIENT_URL must use HTTPS in production.');
+  if (env.clientUrls.some((url) => !/^https:\/\//i.test(url))) {
+    throw new Error('CLIENT_URL and CLIENT_URLS must use HTTPS in production.');
   }
 }
 if (!env.jwtSecret) {

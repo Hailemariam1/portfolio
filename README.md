@@ -221,8 +221,10 @@ Errors are JSON: `{ "error": "message", "details": [{ "field": "", "message": ""
 - **Contact inbox** has no public read endpoint.
 - **Honeypot** field plus rate limiting on the contact form.
 
-If the frontend and API are deployed on different origins, set `CLIENT_URL` accordingly and change
-the cookie `sameSite` policy in `server/src/utils/tokens.js` to `none` (requires HTTPS).
+For a split deployment, prefer the same-origin Vercel proxy described below. If you call the API
+directly across origins instead, set `CLIENT_URL`/`CLIENT_URLS` to the exact frontend origin and
+change the cookie `sameSite` policy in `server/src/utils/tokens.js` and `csrf.js` to `none` (HTTPS
+required). Browsers that block third-party cookies can still prevent admin sign-in that way.
 
 ## Deployment
 
@@ -236,6 +238,26 @@ the cookie `sameSite` policy in `server/src/utils/tokens.js` to `none` (requires
 5. Run `npm run seed` once against the production database to create the administrator and set up
    site settings.
 6. Configure SMTP if you want email notifications for contact messages.
+
+### Split deployment: Vercel frontend + Render API
+
+Use this when the React app is on Vercel and the API is on Render. The included
+`client/vercel.json` proxies `/api` and `/uploads` to the Render service, so the browser only talks
+to the Vercel origin. That avoids CORS and third-party cookie restrictions for admin sign-in.
+
+1. **Render**: set `CLIENT_URL` to the frontend’s exact public origin, with no trailing slash (for
+example `https://your-project.vercel.app`). Keep `MONGO_URI`, `JWT_SECRET`, `NODE_ENV=production`
+and the admin credentials set, then redeploy. Add extra origins (such as preview URLs) as a
+comma-separated `CLIENT_URLS` value only when needed.
+2. **Vercel**: set the project Root Directory to `client`, build with `npm run build`, output `dist`.
+Leave `VITE_API_URL` **unset** (or set it to `/api`) so requests use the proxy. If it points at the
+Render URL, the browser calls Render directly and the fix is bypassed. Redeploy after changing it.
+3. **Vercel Deployment Protection**: disable Vercel Authentication for the public/production
+deployment. A protected deployment redirects every path — including `/api/*` — to Vercel SSO, which
+the app reports as “Could not reach the server”.
+4. Open the public production domain rather than a protected preview deployment URL.
+5. If uploads use the local-disk fallback, note that Render’s filesystem is ephemeral; configure
+   Cloudinary for durable images and resumes.
 
 ## Managing content
 

@@ -25,7 +25,13 @@ app.use(
 );
 app.use(
   cors({
-    origin: [env.clientUrl],
+    origin(origin, callback) {
+      // No Origin header: same-origin navigation, curl or a server-side proxy.
+      if (!origin) return callback(null, true);
+      if (env.clientUrls.includes(origin)) return callback(null, true);
+      console.warn(`[cors] blocked origin: ${origin}`);
+      return callback(null, false);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
   })
