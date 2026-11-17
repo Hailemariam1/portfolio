@@ -68,6 +68,7 @@ Then edit `server/.env`:
 | Variable                | Purpose                                                              |
 | ----------------------- | -------------------------------------------------------------------- |
 | `MONGO_URI`             | MongoDB connection string                                            |
+| `CLIENT_URL`            | Public HTTPS origin allowed to call the API                           |
 | `ADMIN_NAME`            | Name of the administrator account created by the seed script         |
 | `ADMIN_EMAIL`           | Administrator email (used to sign in)                                |
 | `ADMIN_PASSWORD`        | Administrator password, 10+ characters (change before deploying)     |
@@ -125,6 +126,21 @@ Production build (Express serves the built React app from the same origin):
 npm run build
 NODE_ENV=production npm start
 ```
+
+Production requires `CLIENT_URL`, `MONGO_URI` and a long random `JWT_SECRET`. The application
+also protects administrative writes with a CSRF token and validates uploaded file signatures.
+Run the checks before deploying:
+
+```bash
+npm test --prefix server
+npm run build
+npm audit --omit=dev --prefix client
+npm audit --omit=dev --prefix server
+```
+
+Back up MongoDB regularly and define a retention policy for contact messages because they contain
+personal information and request metadata. Never commit `server/.env`, uploaded files, or service
+credentials.
 
 ---
 

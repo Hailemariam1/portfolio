@@ -54,6 +54,7 @@ export default function Writing() {
               key={item}
               type="button"
               onClick={() => setCategory(item)}
+              aria-pressed={category === item}
               className={`rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium transition ${
                 category === item
                   ? 'border-ink bg-ink text-paper'

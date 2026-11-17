@@ -15,6 +15,8 @@ function getTransport() {
     host: env.mail.host,
     port: env.mail.port,
     secure: env.mail.secure,
+    disableFileAccess: true,
+    disableUrlAccess: true,
     auth: env.mail.user ? { user: env.mail.user, pass: env.mail.pass } : undefined
   });
   return transporter;

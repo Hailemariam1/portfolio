@@ -13,9 +13,11 @@ import * as experience from '../controllers/experienceController.js';
 import * as blog from '../controllers/blogController.js';
 import * as messages from '../controllers/messageController.js';
 import * as settings from '../controllers/settingsController.js';
+import { getCsrfToken } from '../middleware/csrf.js';
 
 const router = Router();
 
+router.get('/csrf', getCsrfToken);
 router.get('/projects', validate({ query: projectListQuery }), projects.listPublic);
 router.get('/projects/:slug', validate({ params: slugParam }), projects.getPublicOne);
 

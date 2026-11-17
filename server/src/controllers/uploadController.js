@@ -4,7 +4,7 @@ import path from 'node:path';
 import env from '../config/env.js';
 import { uploadToCloudinary } from '../config/cloudinary.js';
 import { ApiError, asyncHandler } from '../utils/http.js';
-import { imageMimeTypes } from '../middleware/upload.js';
+import { hasExpectedSignature, imageMimeTypes } from '../middleware/upload.js';
 
 const IMAGE_LIMIT = 5 * 1024 * 1024;
 const PDF_LIMIT = 10 * 1024 * 1024;
@@ -21,6 +21,9 @@ export const uploadAsset = asyncHandler(async (req, res) => {
 
   const kind = req.body.kind === 'resume' ? 'resume' : 'image';
   const { buffer, mimetype, size, originalname } = req.file;
+  if (!hasExpectedSignature(buffer, mimetype)) {
+    throw ApiError.badRequest('The uploaded file content does not match its file type.');
+  }
 
   if (kind === 'resume') {
     if (mimetype !== 'application/pdf') throw ApiError.badRequest('The resume must be a PDF file.');
@@ -50,7 +53,14 @@ export const uploadAsset = asyncHandler(async (req, res) => {
   }
 
   await fs.mkdir(env.uploads.dir, { recursive: true });
-  const ext = (path.extname(originalname) || (kind === 'resume' ? '.pdf' : '.jpg')).toLowerCase();
+  const extensions = {
+    'application/pdf': '.pdf',
+    'image/gif': '.gif',
+    'image/jpeg': '.jpg',
+    'image/png': '.png',
+    'image/webp': '.webp'
+  };
+  const ext = extensions[mimetype] || path.extname(originalname).toLowerCase();
   const fileName = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`;
   await fs.writeFile(path.join(env.uploads.dir, fileName), buffer);
 

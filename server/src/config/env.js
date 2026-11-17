@@ -64,8 +64,14 @@ env.cloudinary.enabled = Boolean(
   env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret
 );
 
-if (isProd && !env.jwtSecret) {
-  throw new Error('JWT_SECRET must be set in production.');
+if (isProd) {
+  const missing = ['CLIENT_URL', 'MONGO_URI', 'JWT_SECRET'].filter((key) => !process.env[key]);
+  if (missing.length) {
+    throw new Error(`Missing required production environment variables: ${missing.join(', ')}`);
+  }
+  if (!/^https:\/\//i.test(env.clientUrl)) {
+    throw new Error('CLIENT_URL must use HTTPS in production.');
+  }
 }
 if (!env.jwtSecret) {
   env.jwtSecret = 'insecure-development-secret-do-not-use-in-production';

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from '../middleware/auth.js';
+import { requireCsrf } from '../middleware/csrf.js';
 import { loginLimiter, writeLimiter } from '../middleware/rateLimits.js';
 import { handleUploadErrors, upload } from '../middleware/upload.js';
 import { validate } from '../middleware/validate.js';
@@ -36,9 +37,10 @@ const router = Router();
 
 /* Publicly reachable pieces of the admin API: sign-in and sign-out only. */
 router.post('/login', loginLimiter, validate({ body: loginPayload }), auth.login);
-router.post('/logout', auth.logout);
+router.post('/logout', requireCsrf, auth.logout);
 
 /* ------------------------- everything below is protected ------------------ */
+router.use(requireCsrf);
 router.use(requireAuth);
 
 router.get('/me', auth.me);

@@ -1,34 +1,35 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
-import { SettingsProvider } from './context/SettingsContext.jsx';
+import { SettingsProvider, useSettings } from './context/SettingsContext.jsx';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import PublicLayout from './components/Layout.jsx';
 import AmbientBackground from './components/AmbientBackground.jsx';
 import ScrollReveal from './components/ScrollReveal.jsx';
-import Home from './pages/Home.jsx';
-import Projects from './pages/Projects.jsx';
-import ProjectDetail from './pages/ProjectDetail.jsx';
-import About from './pages/About.jsx';
-import Writing from './pages/Writing.jsx';
-import PostDetail from './pages/PostDetail.jsx';
-import Contact from './pages/Contact.jsx';
-import NotFound from './pages/NotFound.jsx';
 import { Spinner } from './components/ui.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 import AdminLayout from './admin/AdminLayout.jsx';
-import Login from './admin/Login.jsx';
-import Dashboard from './admin/Dashboard.jsx';
-import AdminProjects from './admin/Projects.jsx';
-import ProjectForm from './admin/ProjectForm.jsx';
-import Skills from './admin/Skills.jsx';
-import Experience from './admin/Experience.jsx';
-import Blog from './admin/Blog.jsx';
-import BlogForm from './admin/BlogForm.jsx';
-import Messages from './admin/Messages.jsx';
-import MessageDetail from './admin/MessageDetail.jsx';
-import SettingsPage from './admin/Settings.jsx';
+const Home = lazy(() => import('./pages/Home.jsx'));
+const Projects = lazy(() => import('./pages/Projects.jsx'));
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail.jsx'));
+const About = lazy(() => import('./pages/About.jsx'));
+const Writing = lazy(() => import('./pages/Writing.jsx'));
+const PostDetail = lazy(() => import('./pages/PostDetail.jsx'));
+const Contact = lazy(() => import('./pages/Contact.jsx'));
+const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+const Login = lazy(() => import('./admin/Login.jsx'));
+const Dashboard = lazy(() => import('./admin/Dashboard.jsx'));
+const AdminProjects = lazy(() => import('./admin/Projects.jsx'));
+const ProjectForm = lazy(() => import('./admin/ProjectForm.jsx'));
+const Skills = lazy(() => import('./admin/Skills.jsx'));
+const Experience = lazy(() => import('./admin/Experience.jsx'));
+const Blog = lazy(() => import('./admin/Blog.jsx'));
+const BlogForm = lazy(() => import('./admin/BlogForm.jsx'));
+const Messages = lazy(() => import('./admin/Messages.jsx'));
+const MessageDetail = lazy(() => import('./admin/MessageDetail.jsx'));
+const SettingsPage = lazy(() => import('./admin/Settings.jsx'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -36,6 +37,40 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
+}
+
+function DocumentMeta() {
+  const { pathname } = useLocation();
+  const { settings } = useSettings();
+
+  useEffect(() => {
+    const section =
+      pathname === '/'
+        ? 'Home'
+        : pathname.startsWith('/projects')
+          ? 'Projects'
+          : pathname.startsWith('/writing')
+            ? 'Writing'
+            : pathname.startsWith('/about')
+              ? 'About'
+              : pathname.startsWith('/contact')
+                ? 'Contact'
+                : pathname.startsWith('/admin')
+                  ? 'Admin'
+                  : 'Page';
+    document.title = `${section} — ${settings.name || 'Portfolio'}`;
+  }, [pathname, settings.name]);
+
+  return null;
+}
+
+function RouteLoading() {
+  return (
+    <div className="flex min-h-[40vh] items-center justify-center gap-3 text-sm text-ink-muted">
+      <Spinner className="h-4 w-4" />
+      Loading page…
+    </div>
+  );
 }
 
 function RequireAuth({ children }) {
@@ -63,7 +98,10 @@ export default function App() {
           <AmbientBackground />
           <div className="relative z-10">
           <ScrollToTop />
+          <DocumentMeta />
           <ScrollReveal />
+          <ErrorBoundary>
+          <Suspense fallback={<RouteLoading />}>
           <Routes>
             <Route element={<PublicLayout />}>
               <Route index element={<Home />} />
@@ -100,6 +138,8 @@ export default function App() {
               <Route path="settings" element={<SettingsPage />} />
             </Route>
           </Routes>
+          </Suspense>
+          </ErrorBoundary>
           </div>
         </AuthProvider>
         </SettingsProvider>

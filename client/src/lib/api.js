@@ -1,4 +1,5 @@
 const API_BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '');
+let csrfToken;
 
 export class ApiError extends Error {
   constructor(message, status, details) {
@@ -15,14 +16,23 @@ export class ApiError extends Error {
 
 async function request(path, { method = 'GET', body, signal } = {}) {
   const isForm = body instanceof FormData;
+  const isMutating = !['GET', 'HEAD', 'OPTIONS'].includes(method);
+  const needsCsrf = isMutating && path.startsWith('/admin/');
+
+  if (needsCsrf && !csrfToken) {
+    const csrfResponse = await request('/csrf');
+    csrfToken = csrfResponse?.csrfToken;
+  }
 
   let response;
   try {
+    const headers = isForm || body === undefined ? {} : { 'Content-Type': 'application/json' };
+    if (needsCsrf && csrfToken) headers['X-CSRF-Token'] = csrfToken;
     response = await fetch(`${API_BASE}${path}`, {
       method,
       credentials: 'include',
       signal,
-      headers: isForm || body === undefined ? undefined : { 'Content-Type': 'application/json' },
+      headers: Object.keys(headers).length ? headers : undefined,
       body: isForm ? body : body === undefined ? undefined : JSON.stringify(body)
     });
   } catch (error) {
@@ -41,6 +51,7 @@ async function request(path, { method = 'GET', body, signal } = {}) {
   }
 
   if (!response.ok) {
+    if (response.status === 403 && needsCsrf) csrfToken = undefined;
     if (response.status === 401 && path.startsWith('/admin/')) {
       window.dispatchEvent(new Event('admin:unauthorized'));
     }
