@@ -26,6 +26,27 @@ export function mailConfigured() {
   return Boolean(env.mail.host);
 }
 
+export async function sendTestContactNotification({ settings }) {
+  const transport = getTransport();
+  const recipient = env.mail.to || settings?.email;
+  if (!transport) return { sent: false, error: 'SMTP is not configured.' };
+  if (!recipient) return { sent: false, error: 'No notification recipient is configured.' };
+
+  try {
+    await transport.sendMail({
+      from: env.mail.from,
+      to: recipient,
+      subject: 'Portfolio email delivery test',
+      text: 'This is a test email from your portfolio contact form.',
+      html: '<p>This is a test email from your portfolio contact form.</p>'
+    });
+    return { sent: true, recipient };
+  } catch (error) {
+    console.warn('[mail] test email failed:', error.message);
+    return { sent: false, error: error.message };
+  }
+}
+
 /**
  * Notify the portfolio owner about a new contact message. Never throws: a mail
  * outage must not lose a message that is already stored in MongoDB.

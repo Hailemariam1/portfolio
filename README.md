@@ -204,6 +204,12 @@ POST   /api/admin/uploads            multipart `file` + `kind=image|resume`
 
 Errors are JSON: `{ "error": "message", "details": [{ "field": "", "message": "" }] }`.
 
+The contact form always saves messages to the admin inbox. When SMTP is configured, it also sends
+a notification email. After signing in, use **Settings → Contact and links → Send test email** to
+verify the production mail configuration and check both the destination inbox and its spam folder.
+The public contact form allows 20 submissions per hour; messages remain protected by validation,
+the honeypot field and rate limiting.
+
 ---
 
 ## Security notes
@@ -258,6 +264,9 @@ the app reports as “Could not reach the server”.
 4. Open the public production domain rather than a protected preview deployment URL.
 5. If uploads use the local-disk fallback, note that Render’s filesystem is ephemeral; configure
    Cloudinary for durable images and resumes.
+
+The client also includes static `robots.txt` and `sitemap.xml` files in `client/public`. Update the
+URLs in those files if you move the site to a custom domain.
 
 ## Managing content
 

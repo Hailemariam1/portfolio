@@ -189,6 +189,12 @@ export const messageUpdatePayload = z.object({
 /* -------------------------------------------------------------- settings -- */
 
 const homeText = (max) => z.string().trim().max(max).optional().default('');
+const testimonialPayload = z.object({
+  quote: z.string().trim().max(800).optional().default(''),
+  name: z.string().trim().max(120).optional().default(''),
+  role: z.string().trim().max(160).optional().default(''),
+  company: z.string().trim().max(160).optional().default('')
+});
 
 export const homePayload = z.object({
   heroNote: homeText(160),
@@ -228,7 +234,8 @@ export const homePayload = z.object({
     .max(6)
     .optional()
     .default([]),
-  focusNote: homeText(600)
+  focusNote: homeText(600),
+  testimonials: z.array(testimonialPayload).max(12).optional().default([])
 });
 
 export const settingsPayload = z.object({

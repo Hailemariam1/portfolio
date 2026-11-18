@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, Save } from 'lucide-react';
+import { ArrowUpRight, Mail, Save } from 'lucide-react';
 import { api } from '../lib/api.js';
 import { useSettings } from '../context/SettingsContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
@@ -100,6 +100,7 @@ export default function SettingsPage() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [testingEmail, setTestingEmail] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -166,6 +167,41 @@ export default function SettingsPage() {
     }));
   };
 
+  const setTestimonial = (index, field, value) => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        testimonials: current.home.testimonials.map((item, position) =>
+          position === index ? { ...item, [field]: value } : item
+        )
+      }
+    }));
+  };
+
+  const addTestimonial = () => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        testimonials: [
+          ...current.home.testimonials,
+          { quote: '', name: '', role: '', company: '' }
+        ]
+      }
+    }));
+  };
+
+  const removeTestimonial = (index) => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        testimonials: current.home.testimonials.filter((_, position) => position !== index)
+      }
+    }));
+  };
+
   const setFocusRow = (index, field, value) => {
     setForm((current) => ({
       ...current,
@@ -197,6 +233,18 @@ export default function SettingsPage() {
       toast.error(error.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const testEmail = async () => {
+    setTestingEmail(true);
+    try {
+      const { recipient } = await api.post('/admin/settings/test-email');
+      toast.success(`Test email sent to ${recipient}. Check that inbox and spam folder.`);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setTestingEmail(false);
     }
   };
 
@@ -359,6 +407,77 @@ export default function SettingsPage() {
             </div>
           </AdminCard>
 
+          <AdminCard title="Testimonials">
+            <p className="mb-4 text-[12px] leading-relaxed text-ink-muted">
+              Add testimonials here when you have permission to publish them. The section stays hidden
+              until at least one testimonial is added.
+            </p>
+            <div className="space-y-3">
+              {form.home.testimonials.map((testimonial, index) => (
+                <div key={index} className="rounded-xl border border-line bg-paper-2/40 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                      Testimonial {index + 1}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => removeTestimonial(index)}
+                      className="text-[11px] font-medium text-red-600 hover:underline dark:text-red-400"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="mt-3 grid gap-3">
+                    <Field label="Quote" htmlFor={`testimonial-${index}-quote`}>
+                      <textarea
+                        id={`testimonial-${index}-quote`}
+                        rows={3}
+                        maxLength={800}
+                        className="input resize-y"
+                        value={testimonial.quote || ''}
+                        onChange={(event) => setTestimonial(index, 'quote', event.target.value)}
+                      />
+                    </Field>
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      <Field label="Name" htmlFor={`testimonial-${index}-name`}>
+                        <input
+                          id={`testimonial-${index}-name`}
+                          maxLength={120}
+                          className="input"
+                          value={testimonial.name || ''}
+                          onChange={(event) => setTestimonial(index, 'name', event.target.value)}
+                        />
+                      </Field>
+                      <Field label="Role" htmlFor={`testimonial-${index}-role`}>
+                        <input
+                          id={`testimonial-${index}-role`}
+                          maxLength={160}
+                          className="input"
+                          value={testimonial.role || ''}
+                          onChange={(event) => setTestimonial(index, 'role', event.target.value)}
+                        />
+                      </Field>
+                      <Field label="Company" htmlFor={`testimonial-${index}-company`}>
+                        <input
+                          id={`testimonial-${index}-company`}
+                          maxLength={160}
+                          className="input"
+                          value={testimonial.company || ''}
+                          onChange={(event) => setTestimonial(index, 'company', event.target.value)}
+                        />
+                      </Field>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {form.home.testimonials.length < 12 && (
+              <button type="button" onClick={addTestimonial} className="btn-secondary btn-xs mt-3">
+                Add testimonial
+              </button>
+            )}
+          </AdminCard>
+
           <AdminCard title="Closing call to action">
             <div className="grid gap-4">
               <Field label="Eyebrow" htmlFor="ctaEyebrow" error={errors['home.ctaEyebrow']}>
@@ -476,6 +595,18 @@ export default function SettingsPage() {
                 />
               </Field>
             </div>
+            <button
+              type="button"
+              onClick={testEmail}
+              className="btn-secondary btn-xs mt-4"
+              disabled={testingEmail}
+            >
+              <Mail className="h-3.5 w-3.5" />
+              {testingEmail ? 'Sending test…' : 'Send test email'}
+            </button>
+            <p className="mt-2 text-[11px] leading-relaxed text-ink-muted">
+              Uses the configured SMTP settings and sends to CONTACT_NOTIFY_EMAIL, or this site email.
+            </p>
           </AdminCard>
 
           <AdminCard title="Availability">

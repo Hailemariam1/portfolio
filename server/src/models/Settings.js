@@ -27,6 +27,16 @@ const focusRowSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const testimonialSchema = new mongoose.Schema(
+  {
+    quote: { type: String, default: '', trim: true },
+    name: { type: String, default: '', trim: true },
+    role: { type: String, default: '', trim: true },
+    company: { type: String, default: '', trim: true }
+  },
+  { _id: false }
+);
+
 /** Landing-page copy, editable from /admin/settings. */
 const homeSchema = new mongoose.Schema(
   {
@@ -117,7 +127,8 @@ const homeSchema = new mongoose.Schema(
       default:
         'Finishing a Computer Science degree while building full-stack projects and writing about what I learn.',
       trim: true
-    }
+    },
+    testimonials: { type: [testimonialSchema], default: () => [] }
   },
   { _id: false }
 );

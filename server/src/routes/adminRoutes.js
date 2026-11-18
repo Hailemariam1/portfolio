@@ -92,6 +92,7 @@ router.patch('/messages/:id', validate({ params: idParam, body: messageUpdatePay
 router.delete('/messages/:id', validate({ params: idParam }), messages.remove);
 
 /* Site settings */
+router.post('/settings/test-email', settings.testEmail);
 router.put('/settings', validate({ body: settingsPayload }), settings.update);
 
 /* Uploads */

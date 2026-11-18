@@ -49,5 +49,6 @@ export const DEFAULT_HOME = {
     { label: 'Data', text: 'MongoDB schemas, indexes, aggregation' }
   ],
   focusNote:
-    'Finishing a Computer Science degree while building full-stack projects and writing about what I learn.'
+    'Finishing a Computer Science degree while building full-stack projects and writing about what I learn.',
+  testimonials: []
 };

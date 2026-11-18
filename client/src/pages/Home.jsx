@@ -146,6 +146,37 @@ export default function Home() {
         </div>
       </section>
 
+      {home.testimonials?.length > 0 && (
+        <section className="container-page pt-16 sm:pt-24">
+          <SectionHeading
+            eyebrow="Testimonials"
+            title="What people say about working with me."
+            intro="A few words from people who have seen these projects take shape."
+            className="reveal"
+          />
+          <div className="reveal-stagger mt-9 grid gap-4 md:grid-cols-2">
+            {home.testimonials.map((testimonial, index) => (
+              <figure
+                key={`${testimonial.name}-${index}`}
+                className="reveal rounded-2xl border border-line bg-surface p-6"
+              >
+                <blockquote className="text-[15px] leading-relaxed text-ink-soft">
+                  “{testimonial.quote}”
+                </blockquote>
+                <figcaption className="mt-5 border-t border-line pt-4">
+                  <p className="text-sm font-medium text-ink">{testimonial.name}</p>
+                  {(testimonial.role || testimonial.company) && (
+                    <p className="mt-1 text-[12px] text-ink-muted">
+                      {[testimonial.role, testimonial.company].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="container-page pt-16 sm:pt-24">
         <SectionHeading
           eyebrow={home.workEyebrow}

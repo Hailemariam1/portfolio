@@ -18,7 +18,7 @@ export const loginLimiter = rateLimit({
 /** Abuse protection for the public contact form. */
 export const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  limit: 5,
+  limit: 20,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler
