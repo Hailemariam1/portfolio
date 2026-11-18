@@ -47,6 +47,15 @@ if (!env.isProd) app.use(morgan('dev'));
 fs.mkdirSync(env.uploads.dir, { recursive: true });
 app.use(env.uploads.publicPath, express.static(env.uploads.dir, { maxAge: '1h', fallthrough: true }));
 
+// API responses are never cacheable: several routes return private admin data,
+// and Vercel honours upstream cache headers when it proxies /api to this
+// service (external rewrites are cached by default for newer projects). Express
+// sends no Cache-Control on JSON, so state it explicitly.
+app.use('/api', (_req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', uptime: Math.round(process.uptime()), env: env.nodeEnv });
 });

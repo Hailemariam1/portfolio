@@ -53,7 +53,7 @@ async function request(path, { method = 'GET', body, signal } = {}) {
 
   if (!contentType.toLowerCase().includes('application/json')) {
     throw new ApiError(
-      'The API is not configured for this deployment. Set VITE_API_URL to the backend URL.',
+      'The server returned an unexpected response instead of JSON. Check the API proxy and deployment protection settings.',
       response.status
     );
   }
