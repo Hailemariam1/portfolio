@@ -15,32 +15,16 @@ import { useSettings } from '../context/SettingsContext.jsx';
 import { AvailabilityBadge, LoadingBlock, SectionHeading } from '../components/ui.jsx';
 import ProjectCard from '../components/ProjectCard.jsx';
 import { formatDate } from '../lib/format.js';
+import { DEFAULT_HOME } from '../lib/homeDefaults.js';
 
-const CAPABILITIES = [
-  {
-    icon: ShieldCheck,
-    title: 'Applications with real accounts',
-    body: 'Sign-in, protected routes and role checks, with hashed passwords and JWT sessions stored in httpOnly cookies.'
-  },
-  {
-    icon: Server,
-    title: 'APIs that hold up',
-    body: 'Express endpoints with server-side validation, pagination, filtering and error responses a frontend can act on.'
-  },
-  {
-    icon: Database,
-    title: 'Data models that fit the product',
-    body: 'MongoDB schemas with relationships and indexes chosen around the queries the app actually runs.'
-  },
-  {
-    icon: Rocket,
-    title: 'Shipped, not just local',
-    body: 'Deployments to Render and Vercel, environment configuration, Cloudinary uploads and email notifications.'
-  }
-];
+/** Icons cycle through the list so any number of capability cards still renders. */
+const CAPABILITY_ICONS = [ShieldCheck, Server, Database, Rocket];
 
 export default function Home() {
   const { settings } = useSettings();
+  const home = { ...DEFAULT_HOME, ...(settings.home || {}) };
+  const capabilities = home.capabilities ?? DEFAULT_HOME.capabilities;
+  const focusRows = home.focusRows ?? DEFAULT_HOME.focusRows;
   const [projects, setProjects] = useState([]);
   const [skillGroups, setSkillGroups] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -93,8 +77,12 @@ export default function Home() {
                 <MapPin className="h-3.5 w-3.5" />
                 {settings.location}
               </span>
-              <span className="hidden h-3 w-px bg-line-strong sm:block" />
-              <span>Early career · open to junior full-stack roles</span>
+              {home.heroNote && (
+                <>
+                  <span className="hidden h-3 w-px bg-line-strong sm:block" />
+                  <span>{home.heroNote}</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -109,13 +97,9 @@ export default function Home() {
               </div>
             ) : (
               <div className="rounded-2xl border border-line bg-surface p-6 shadow-glow">
-                <p className="eyebrow">Where I work</p>
+                <p className="eyebrow">{home.focusTitle}</p>
                 <ul className="mt-4 divide-y divide-line">
-                  {[
-                    { label: 'Frontend', text: 'React, responsive layouts, accessible forms' },
-                    { label: 'Backend', text: 'Express REST APIs, JWT sessions, validation' },
-                    { label: 'Data', text: 'MongoDB schemas, indexes, aggregation' }
-                  ].map((row) => (
+                  {focusRows.map((row) => (
                     <li key={row.label} className="flex gap-4 py-3.5">
                       <span className="w-20 shrink-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-muted">
                         {row.label}
@@ -128,10 +112,7 @@ export default function Home() {
                   <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
                     Right now
                   </p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink-soft">
-                    Finishing a Computer Science degree while building full-stack projects and writing
-                    about what I learn.
-                  </p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink-soft">{home.focusNote}</p>
                 </div>
               </div>
             )}
@@ -141,17 +122,17 @@ export default function Home() {
 
       <section className="container-page pt-16 sm:pt-20">
         <SectionHeading
-          eyebrow="What I can build"
-          title="Tools and evidence, not a list of languages."
-          intro="These are the things I can take from an idea to a working deployment. Every one of them appears in a project case study below."
+          eyebrow={home.capabilitiesEyebrow}
+          title={home.capabilitiesTitle}
+          intro={home.capabilitiesIntro}
           className="reveal"
         />
         <div className="reveal-stagger mt-9 grid gap-4 sm:grid-cols-2">
-          {CAPABILITIES.map((item) => {
-            const Icon = item.icon;
+          {capabilities.map((item, index) => {
+            const Icon = CAPABILITY_ICONS[index % CAPABILITY_ICONS.length];
             return (
               <div
-                key={item.title}
+                key={`${index}-${item.title}`}
                 className="reveal rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-line-strong"
               >
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-paper-2 text-clay">
@@ -167,9 +148,9 @@ export default function Home() {
 
       <section className="container-page pt-16 sm:pt-24">
         <SectionHeading
-          eyebrow="Selected work"
-          title="Case studies, not screenshots."
-          intro="Each project explains the problem, what I personally built, and what went wrong along the way. Projects are labelled academic, personal, collaborative or freelance."
+          eyebrow={home.workEyebrow}
+          title={home.workTitle}
+          intro={home.workIntro}
           className="reveal"
           action={
             <Link to="/projects" className="btn-secondary btn-xs shrink-0">
@@ -199,9 +180,9 @@ export default function Home() {
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <SectionHeading
-              eyebrow="Skills"
-              title="Grouped by where they sit in the stack."
-              intro="Nothing here is a logo I have not used in a project. Categories, notes and ordering are managed from the dashboard."
+              eyebrow={home.skillsEyebrow}
+              title={home.skillsTitle}
+              intro={home.skillsIntro}
               className="reveal"
             />
           </div>
@@ -241,9 +222,9 @@ export default function Home() {
       {posts.length > 0 && (
         <section className="container-page pt-16 sm:pt-24">
           <SectionHeading
-            eyebrow="Writing"
-            title="Notes from building things."
-            intro="Short, specific write-ups about problems I hit and how I solved them."
+            eyebrow={home.writingEyebrow}
+            title={home.writingTitle}
+            intro={home.writingIntro}
             className="reveal"
             action={
               <Link to="/writing" className="btn-secondary btn-xs shrink-0">
@@ -281,15 +262,12 @@ export default function Home() {
           <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-slateblue/10 blur-3xl" />
           <div className="relative">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-muted">
-              Next step
+              {home.ctaEyebrow}
             </p>
             <h2 className="mt-3 max-w-2xl text-[1.9rem] leading-tight text-ink sm:text-[2.4rem]">
-              Looking for a junior developer who finishes what they start?
+              {home.ctaTitle}
             </h2>
-            <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-ink-soft">
-              I&rsquo;m available for junior full-stack roles and small freelance builds. If you want to
-              talk about a role, a project or a problem, send me a message — I reply within a day or two.
-            </p>
+            <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-ink-soft">{home.ctaBody}</p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link to="/contact" className="btn-primary">
                 Contact me

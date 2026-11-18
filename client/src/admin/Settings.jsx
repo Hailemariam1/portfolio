@@ -6,6 +6,7 @@ import { useToast } from '../context/ToastContext.jsx';
 import { AdminCard, AdminPageHeader } from './AdminLayout.jsx';
 import { Field, LoadingBlock, Spinner } from '../components/ui.jsx';
 import { ImageUpload, ResumeUpload } from '../components/Uploads.jsx';
+import { DEFAULT_HOME } from '../lib/homeDefaults.js';
 
 const FIELDS = [
   'name',
@@ -21,6 +22,76 @@ const FIELDS = [
   'availabilityNote',
   'footerText'
 ];
+
+const SECTION_GROUPS = [
+  {
+    prefix: 'capabilities',
+    title: 'Capability cards heading',
+    hint: 'Sits above the capability cards.'
+  },
+  {
+    prefix: 'work',
+    title: 'Selected work heading',
+    hint: 'Sits above the featured projects.'
+  },
+  {
+    prefix: 'skills',
+    title: 'Skills heading',
+    hint: 'Sits beside the skills groups.'
+  },
+  {
+    prefix: 'writing',
+    title: 'Writing heading',
+    hint: 'Sits above the latest posts.'
+  }
+];
+
+function SectionCopyGroup({ group, home, errors, onChange }) {
+  const key = (suffix) => `${group.prefix}${suffix}`;
+
+  return (
+    <div className="rounded-xl border border-line bg-paper-2/40 p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+        {group.title}
+      </p>
+      <p className="mt-1 text-[11.5px] leading-relaxed text-ink-muted">{group.hint}</p>
+      <div className="mt-3 grid gap-3">
+        <Field label="Eyebrow" htmlFor={key('Eyebrow')} error={errors[`home.${key('Eyebrow')}`]}>
+          <input
+            id={key('Eyebrow')}
+            maxLength={80}
+            className="input"
+            value={home[key('Eyebrow')] || ''}
+            onChange={(event) => onChange(key('Eyebrow'), event.target.value)}
+          />
+        </Field>
+        <Field label="Heading" htmlFor={key('Title')} error={errors[`home.${key('Title')}`]}>
+          <input
+            id={key('Title')}
+            maxLength={200}
+            className="input"
+            value={home[key('Title')] || ''}
+            onChange={(event) => onChange(key('Title'), event.target.value)}
+          />
+        </Field>
+        <Field
+          label="Supporting text"
+          htmlFor={key('Intro')}
+          error={errors[`home.${key('Intro')}`]}
+        >
+          <textarea
+            id={key('Intro')}
+            rows={2}
+            maxLength={600}
+            className="input resize-y"
+            value={home[key('Intro')] || ''}
+            onChange={(event) => onChange(key('Intro'), event.target.value)}
+          />
+        </Field>
+      </div>
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const { reload } = useSettings();
@@ -42,6 +113,7 @@ export default function SettingsPage() {
         });
         next.profilePhoto = settings.profilePhoto || null;
         next.resume = settings.resume || null;
+        next.home = { ...DEFAULT_HOME, ...(settings.home || {}) };
         setForm(next);
       })
       .catch((error) => toast.error(error.message))
@@ -55,6 +127,55 @@ export default function SettingsPage() {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     setForm((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: '' }));
+  };
+
+  const setHome = (field, value) => {
+    setForm((current) => ({ ...current, home: { ...current.home, [field]: value } }));
+    setErrors((current) => ({ ...current, [`home.${field}`]: '' }));
+  };
+
+  const setCapability = (index, field, value) => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        capabilities: current.home.capabilities.map((card, position) =>
+          position === index ? { ...card, [field]: value } : card
+        )
+      }
+    }));
+  };
+
+  const addCapability = () => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        capabilities: [...current.home.capabilities, { title: '', body: '' }]
+      }
+    }));
+  };
+
+  const removeCapability = (index) => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        capabilities: current.home.capabilities.filter((_, position) => position !== index)
+      }
+    }));
+  };
+
+  const setFocusRow = (index, field, value) => {
+    setForm((current) => ({
+      ...current,
+      home: {
+        ...current.home,
+        focusRows: current.home.focusRows.map((row, position) =>
+          position === index ? { ...row, [field]: value } : row
+        )
+      }
+    }));
   };
 
   const submit = async (event) => {
@@ -85,7 +206,7 @@ export default function SettingsPage() {
     <>
       <AdminPageHeader
         title="Site settings"
-        description="Everything here appears on the public site: the homepage headline, introduction, availability indicator, contact links and footer."
+        description="Everything here appears on the public site: the landing page copy, headline, introduction, availability indicator, contact links and footer."
         action={
           <a href="/" target="_blank" rel="noopener noreferrer" className="btn-secondary btn-xs">
             Preview site
@@ -153,6 +274,172 @@ export default function SettingsPage() {
                 className="input resize-y"
                 value={form.about}
                 onChange={set('about')}
+              />
+            </Field>
+          </AdminCard>
+
+          <AdminCard title="Landing page hero">
+            <Field
+              label="Line beside your location"
+              htmlFor="heroNote"
+              error={errors['home.heroNote']}
+              hint="Shown under the hero buttons, next to your location. Leave it empty to hide the line."
+            >
+              <input
+                id="heroNote"
+                maxLength={160}
+                className="input"
+                value={form.home.heroNote || ''}
+                onChange={(event) => setHome('heroNote', event.target.value)}
+              />
+            </Field>
+          </AdminCard>
+
+          <AdminCard title="Capability cards">
+            <p className="mb-4 text-[12px] leading-relaxed text-ink-muted">
+              The cards under the capability heading. Their icons follow the order of the cards.
+            </p>
+            <div className="space-y-3">
+              {form.home.capabilities.map((card, index) => (
+                <div key={index} className="rounded-xl border border-line bg-paper-2/40 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                      Card {index + 1}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => removeCapability(index)}
+                      className="text-[11px] font-medium text-red-600 hover:underline dark:text-red-400"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="mt-3 grid gap-3">
+                    <Field label="Title" htmlFor={`capability-${index}-title`}>
+                      <input
+                        id={`capability-${index}-title`}
+                        maxLength={120}
+                        className="input"
+                        value={card.title || ''}
+                        onChange={(event) => setCapability(index, 'title', event.target.value)}
+                      />
+                    </Field>
+                    <Field label="Description" htmlFor={`capability-${index}-body`}>
+                      <textarea
+                        id={`capability-${index}-body`}
+                        rows={3}
+                        maxLength={400}
+                        className="input resize-y"
+                        value={card.body || ''}
+                        onChange={(event) => setCapability(index, 'body', event.target.value)}
+                      />
+                    </Field>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {form.home.capabilities.length < 8 && (
+              <button type="button" onClick={addCapability} className="btn-secondary btn-xs mt-3">
+                Add a card
+              </button>
+            )}
+          </AdminCard>
+
+          <AdminCard title="Section headings">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {SECTION_GROUPS.map((group) => (
+                <SectionCopyGroup
+                  key={group.prefix}
+                  group={group}
+                  home={form.home}
+                  errors={errors}
+                  onChange={setHome}
+                />
+              ))}
+            </div>
+          </AdminCard>
+
+          <AdminCard title="Closing call to action">
+            <div className="grid gap-4">
+              <Field label="Eyebrow" htmlFor="ctaEyebrow" error={errors['home.ctaEyebrow']}>
+                <input
+                  id="ctaEyebrow"
+                  maxLength={80}
+                  className="input"
+                  value={form.home.ctaEyebrow || ''}
+                  onChange={(event) => setHome('ctaEyebrow', event.target.value)}
+                />
+              </Field>
+              <Field label="Heading" htmlFor="ctaTitle" error={errors['home.ctaTitle']}>
+                <input
+                  id="ctaTitle"
+                  maxLength={200}
+                  className="input"
+                  value={form.home.ctaTitle || ''}
+                  onChange={(event) => setHome('ctaTitle', event.target.value)}
+                />
+              </Field>
+              <Field label="Body" htmlFor="ctaBody" error={errors['home.ctaBody']}>
+                <textarea
+                  id="ctaBody"
+                  rows={3}
+                  maxLength={600}
+                  className="input resize-y"
+                  value={form.home.ctaBody || ''}
+                  onChange={(event) => setHome('ctaBody', event.target.value)}
+                />
+              </Field>
+            </div>
+          </AdminCard>
+
+          <AdminCard title="“Where I work” panel">
+            <p className="mb-4 text-[12px] leading-relaxed text-ink-muted">
+              Shown beside the hero while no profile photograph is uploaded.
+            </p>
+            <Field label="Panel heading" htmlFor="focusTitle" error={errors['home.focusTitle']}>
+              <input
+                id="focusTitle"
+                maxLength={80}
+                className="input"
+                value={form.home.focusTitle || ''}
+                onChange={(event) => setHome('focusTitle', event.target.value)}
+              />
+            </Field>
+            <div className="mt-4 space-y-3">
+              {form.home.focusRows.map((row, index) => (
+                <div
+                  key={index}
+                  className="grid gap-3 rounded-xl border border-line bg-paper-2/40 p-4 sm:grid-cols-[minmax(0,10rem)_1fr]"
+                >
+                  <Field label={`Row ${index + 1} label`} htmlFor={`focus-${index}-label`}>
+                    <input
+                      id={`focus-${index}-label`}
+                      maxLength={40}
+                      className="input"
+                      value={row.label || ''}
+                      onChange={(event) => setFocusRow(index, 'label', event.target.value)}
+                    />
+                  </Field>
+                  <Field label="Text" htmlFor={`focus-${index}-text`}>
+                    <input
+                      id={`focus-${index}-text`}
+                      maxLength={240}
+                      className="input"
+                      value={row.text || ''}
+                      onChange={(event) => setFocusRow(index, 'text', event.target.value)}
+                    />
+                  </Field>
+                </div>
+              ))}
+            </div>
+            <Field label="“Right now” note" htmlFor="focusNote" error={errors['home.focusNote']} className="mt-4">
+              <textarea
+                id="focusNote"
+                rows={3}
+                maxLength={600}
+                className="input resize-y"
+                value={form.home.focusNote || ''}
+                onChange={(event) => setHome('focusNote', event.target.value)}
               />
             </Field>
           </AdminCard>

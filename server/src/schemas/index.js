@@ -188,6 +188,49 @@ export const messageUpdatePayload = z.object({
 
 /* -------------------------------------------------------------- settings -- */
 
+const homeText = (max) => z.string().trim().max(max).optional().default('');
+
+export const homePayload = z.object({
+  heroNote: homeText(160),
+  capabilitiesEyebrow: homeText(80),
+  capabilitiesTitle: homeText(200),
+  capabilitiesIntro: homeText(600),
+  capabilities: z
+    .array(
+      z.object({
+        title: z.string().trim().max(120).optional().default(''),
+        body: z.string().trim().max(400).optional().default('')
+      })
+    )
+    .max(8)
+    .optional()
+    .default([]),
+  workEyebrow: homeText(80),
+  workTitle: homeText(200),
+  workIntro: homeText(600),
+  skillsEyebrow: homeText(80),
+  skillsTitle: homeText(200),
+  skillsIntro: homeText(600),
+  writingEyebrow: homeText(80),
+  writingTitle: homeText(200),
+  writingIntro: homeText(600),
+  ctaEyebrow: homeText(80),
+  ctaTitle: homeText(200),
+  ctaBody: homeText(600),
+  focusTitle: homeText(80),
+  focusRows: z
+    .array(
+      z.object({
+        label: z.string().trim().max(40).optional().default(''),
+        text: z.string().trim().max(240).optional().default('')
+      })
+    )
+    .max(6)
+    .optional()
+    .default([]),
+  focusNote: homeText(600)
+});
+
 export const settingsPayload = z.object({
   name: z.string().trim().min(1).max(120).optional(),
   role: z.string().trim().max(160).optional(),
@@ -209,7 +252,8 @@ export const settingsPayload = z.object({
     .optional(),
   availabilityStatus: z.boolean().optional(),
   availabilityNote: z.string().trim().max(200).optional(),
-  footerText: z.string().trim().max(300).optional()
+  footerText: z.string().trim().max(300).optional(),
+  home: homePayload.optional()
 });
 
 export const uploadKindPayload = z.object({
