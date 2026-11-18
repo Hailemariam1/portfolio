@@ -5,7 +5,9 @@ import { sendTestContactNotification } from '../utils/mailer.js';
 /** GET /api/settings — public site content. */
 export const getPublic = asyncHandler(async (_req, res) => {
   const settings = await Settings.getSite();
-  res.json({ settings });
+  const payload = settings.toJSON();
+  if (!payload.home) payload.home = {};
+  res.json({ settings: payload });
 });
 
 /** PUT /api/admin/settings */
@@ -14,7 +16,12 @@ export const update = asyncHandler(async (req, res) => {
 
   Object.entries(req.body).forEach(([key, value]) => {
     if (value === undefined || key === 'key' || key === '_id') return;
-    settings.set(key, value);
+    if (key === 'home') {
+      settings.home = value;
+      settings.markModified('home');
+    } else {
+      settings.set(key, value);
+    }
   });
 
   await settings.save();
